@@ -6,6 +6,9 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "bin": {
+    "app-engine-server": "index.js"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/finwo/app-engine-server.git"

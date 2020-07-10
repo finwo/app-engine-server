@@ -17,6 +17,18 @@ const port       = parseInt(argv.port) || parseInt(process.env.PORT) || 8080;
 const configFile = path.resolve(argv.config || process.env.CONFIG || 'app.yaml');
 const approot    = path.resolve(argv.approot || process.env.APPROOT || path.dirname(configFile));
 
+// Handle --help
+if (argv.help || argv.h) {
+  process.stdout.write(`Usage: app-engine-server [options]\n`);
+  process.stdout.write(`\n`);
+  process.stdout.write(`Options:\n`);
+  process.stdout.write(`  --help -h         Show this usage\n`);
+  process.stdout.write(`  --port <port>     Set port to host on (current: ${port})\n`);
+  process.stdout.write(`  --config <path>   Select app.yaml file to use\n`);
+  process.stdout.write(`  --approot <path>  Set custom approot, defaults to config's directory\n`);
+  process.exit(0);
+}
+
 // Fetch the actual config
 const configStr = fs.readFileSync(configFile, 'utf8');
 const config    = yaml.parse(configStr);
