@@ -11,6 +11,7 @@ const url          = require('url');
 const yaml         = require('yaml');
 const HeaderParser = require('header-stack').Parser;
 const Stream       = require('stream').Stream;
+const morgan       = require('morgan');
 
 // Basics from args
 const cgibin     = argv.cgi || process.env.CGI || null;
@@ -119,11 +120,13 @@ function cgi({req, res, cgibin, script = null} = {}) {
 }
 
 // Prepare handler list
-const handlers = [];
+const handlers = [
+  morgan('tiny'),
+];
 
 // Compile handlers
 config.handlers.forEach(handler => {
-  const reg = new RegExp(handler.url.split('/').join('\\/'));
+  const reg = new RegExp('^' + handler.url.split('/').join('\\/'));
   handlers.push((req, res, next) => {
     const matches = req.url.match(reg);
     if (!matches) return next();
