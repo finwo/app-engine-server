@@ -35,13 +35,19 @@ if (argv.help || argv.h) {
 const configStr = fs.readFileSync(configFile, 'utf8');
 const config    = yaml.parse(configStr);
 
+// Ensure env_variables is available
+config.env_variables = config.env_variables || {};
+
 // CGI runner
 function cgi({req, res, cgibin, script = null} = {}) {
   if (!req.hasOwnProperty("uri")) { req.uri = url.parse(req.url); }
   const serverAddress = (req.headers.host || ('devserver:'+port)).split(':');
 
-  // Basic
+  // init
   const opt = {env:process.env};
+  Object.assign(opt.env, config.env_variables);
+
+  // CGI variables
   opt.env.REDIRECT_STATUS   = 200;
   opt.env.SERVER_SOFTWARE   = 'Node/'+process.version;
   opt.env.SERVER_PROTOCOL   = 'HTTP/1.1';
